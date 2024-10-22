@@ -10,10 +10,8 @@ const PORT = process.env.PORT || 5000
 app.use(express.json())
 
 
-app.use('/api/passwords', passwordRoutes) // import required
+app.use('/api/passwords', passwordRoutes) 
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)
 })
-
-
