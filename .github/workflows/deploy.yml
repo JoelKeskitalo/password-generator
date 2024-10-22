@@ -16,30 +16,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Gå till frontend-mappen där package.json ligger
-      - name: Change directory to frontend
-        run: cd password-generator-frontend
-
+      # Installera beroenden i frontend-mappen
       - name: Install dependencies
+        working-directory: ./password-generator-frontend
         run: npm install
 
+      # Bygg frontend-projektet
       - name: Build project
+        working-directory: ./password-generator-frontend
         run: npm run build
 
       # Sync S3 för dev (på dev-branch)
       - name: Sync S3 for dev (on dev branch)
         if: github.ref == 'refs/heads/dev'
-        run: aws s3 sync ./build s3://your-dev-s3-bucket-name --delete
+        run: aws s3 sync ./password-generator-frontend/build s3://your-dev-s3-bucket-name --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: your-aws-region
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       # Sync S3 för main (på pull request till main)
       - name: Sync S3 for main (on pull request to main)
         if: github.event_name == 'pull_request'
-        run: aws s3 sync ./build s3://your-main-s3-bucket-name --delete
+        run: aws s3 sync ./password-generator-frontend/build s3://your-main-s3-bucket-name --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: your-aws-region
+          AWS_REGION: ${{ secrets.AWS_REGION }}
