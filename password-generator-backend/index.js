@@ -15,5 +15,3 @@ app.use('/api/passwords', passwordRoutes)
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)
 })
-
-// shallow commit for testing
